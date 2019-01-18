@@ -119,25 +119,11 @@ local reset_meta = function(pos)
 end
 
 local clearscreen = function(pos)
-	local objects = minetest.get_objects_inside_radius(pos, 0.5)
-	for _, o in ipairs(objects) do
-		local o_entity = o:get_luaentity()
-		if o_entity and o_entity.name == "digilines_lcd:text" then
-			o:remove()
-		end
-	end
+
 end
 
 local prepare_writing = function(pos)
-	local lcd_info = lcds[minetest.get_node(pos).param2]
-	if lcd_info == nil then return end
-	local text = minetest.add_entity(
-		{x = pos.x + lcd_info.delta.x,
-		 y = pos.y + lcd_info.delta.y,
-		 z = pos.z + lcd_info.delta.z}, "digilines_lcd:text")
-	text:setyaw(lcd_info.yaw or 0)
-	--* text:setpitch(lcd_info.yaw or 0)
-	return text
+
 end
 
 local on_digiline_receive = function(pos, _, channel, msg)
@@ -212,14 +198,8 @@ minetest.register_node("digilines:lcd", {
 })
 
 minetest.register_entity(":digilines_lcd:text", {
-	collisionbox = { 0, 0, 0, 0, 0, 0 },
-	visual = "upright_sprite",
-	textures = {},
-
 	on_activate = function(self)
-		local meta = minetest.get_meta(self.object:getpos())
-		local text = meta:get_string("text")
-		self.object:set_properties({textures={generate_texture(create_lines(text))}})
+		self.object:remove()
 	end
 })
 
